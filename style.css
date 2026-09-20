@@ -1,350 +1,403 @@
 /* 마중마을힐링캠프 — 예약 현황 기록 사이트
-   공통 스타일 (style.css) */
+   공통 스타일 (style.css) — 로고 컬러를 그대로: 네이비(텍스트) + 그린(포인트 배지) */
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
 
-:root {
-  --bg: #faf6f0;
-  --card: #ffffff;
-  --ink: #3a2e26;
-  --ink-soft: #8a7a6d;
-  --accent: #c97b4a;
-  --accent-soft: #f3dfcb;
-  --accent-deep: #a85e33;
-  --line: #ede2d3;
-  --good: #6e9c6e;
-  --radius: 18px;
-  --shadow: 0 6px 20px rgba(120, 90, 60, 0.08);
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-
-.page {
-  max-width: 480px;
-  margin: 0 auto;
-  min-height: 100vh;
-  padding: 24px 20px 100px;
-  position: relative;
-}
-
-/* 상단 헤더 */
-.top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.top h1 {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0;
-}
-
-.top .sub {
-  font-size: 13px;
-  color: var(--ink-soft);
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-
-.brand .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-.brand span.name {
-  font-size: 13px;
-  color: var(--ink-soft);
-  letter-spacing: 0.02em;
-}
-
-/* 카드 */
-.card {
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 20px;
-  margin-bottom: 16px;
-}
-
-.card h2 {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink-soft);
-  margin: 0 0 12px;
-}
-
-/* 오늘 요약 카드 */
-.today-card {
-  background: linear-gradient(135deg, var(--accent-deep), var(--accent));
-  color: #fff;
-  border-radius: var(--radius);
-  padding: 24px 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 10px 24px rgba(168, 94, 51, 0.28);
-}
-
-.today-card .label {
-  font-size: 13px;
-  opacity: 0.85;
-  margin-bottom: 6px;
-}
-
-.today-card .percent {
-  font-size: 44px;
-  font-weight: 900;
-  line-height: 1.1;
-  margin-bottom: 10px;
-}
-
-.today-card .detail {
-  display: flex;
-  gap: 18px;
-  font-size: 13px;
-  opacity: 0.95;
-}
-
-.today-card .detail b {
-  font-size: 15px;
-  display: block;
-}
-
-/* 리스트 */
-.list-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.list-item:last-child {
-  border-bottom: none;
-}
-
-.list-item .date {
-  font-size: 14px;
-  font-weight: 500;
-  min-width: 64px;
-}
-
-.list-item .nums {
-  font-size: 13px;
-  color: var(--ink-soft);
-  flex: 1;
-  padding: 0 10px;
-}
-
-.list-item .pct {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--accent-deep);
-  min-width: 48px;
-  text-align: right;
-}
-
-/* 버튼 */
-.btn {
-  display: block;
-  width: 100%;
-  text-align: center;
-  text-decoration: none;
-  padding: 15px;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  box-sizing: border-box;
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: #fff;
-}
-
-.btn-secondary {
-  background: var(--accent-soft);
-  color: var(--accent-deep);
-}
-
-.btn-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-/* 하단 네비 */
-.nav-bottom {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--card);
-  border-top: 1px solid var(--line);
-  display: flex;
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-.nav-bottom a {
-  flex: 1;
-  text-align: center;
-  padding: 14px 0 12px;
-  text-decoration: none;
-  color: var(--ink-soft);
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.nav-bottom a.active {
-  color: var(--accent-deep);
-  font-weight: 700;
-}
-
-.nav-bottom a .icon {
-  display: block;
-  font-size: 18px;
-  margin-bottom: 2px;
-}
-
-/* 폼 */
-.field {
-  margin-bottom: 18px;
-}
-
-.field label {
-  display: block;
-  font-size: 13px;
-  color: var(--ink-soft);
-  margin-bottom: 6px;
-}
-
-.field input {
-  width: 100%;
-  padding: 13px 14px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  font-size: 16px;
-  font-family: inherit;
-  color: var(--ink);
-  background: #fffdfb;
-}
-
-.field input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
-
-.result-box {
-  background: var(--accent-soft);
-  border-radius: 14px;
-  padding: 16px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.result-box .num {
-  font-size: 36px;
-  font-weight: 900;
-  color: var(--accent-deep);
-}
-
-.result-box .caption {
-  font-size: 12px;
-  color: var(--ink-soft);
-  margin-top: 2px;
-}
-
-.notice {
-  font-size: 12px;
-  color: var(--ink-soft);
-  background: #f5efe6;
-  border-radius: 10px;
-  padding: 10px 12px;
-  margin-bottom: 16px;
-  line-height: 1.5;
-}
-
-/* 탭 (기간 선택) */
-.tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.tabs .tab {
-  flex: 1;
-  text-align: center;
-  padding: 9px 0;
-  border-radius: 10px;
-  font-size: 13px;
-  color: var(--ink-soft);
-  background: var(--card);
-  border: 1px solid var(--line);
-}
-
-.tabs .tab.active {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-  font-weight: 700;
-}
-
-/* 차트 테이블 */
-table.data-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-table.data-table th,
-table.data-table td {
-  text-align: left;
-  padding: 9px 4px;
-  border-bottom: 1px solid var(--line);
-  color: var(--ink);
-}
-
-table.data-table th {
-  color: var(--ink-soft);
-  font-weight: 500;
-}
-
-table.data-table td.pct {
-  font-weight: 700;
-  color: var(--accent-deep);
-  text-align: right;
-}
-table.data-table th:last-child {
-  text-align: right;
-}
-
-.chart-wrap {
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 20px 16px;
-  margin-bottom: 16px;
-}
+   :root {
+     --bg: #FFFFFF;
+     --card: #FFFFFF;
+     --ink: #1B1F33;
+     --ink-soft: #7A7F8C;
+     --navy: #2E3192;
+     --navy-soft: #EEEEF8;
+     --green: #1CA94E;
+     --green-soft: #E7F7ED;
+     --line: #E9E9EF;
+     --radius: 16px;
+     --shadow: 0 2px 10px rgba(30, 34, 51, 0.05);
+   }
+   
+   * { box-sizing: border-box; }
+   
+   html, body {
+     margin: 0;
+     padding: 0;
+     background: var(--bg);
+     color: var(--ink);
+     font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+     -webkit-font-smoothing: antialiased;
+   }
+   
+   .page {
+     max-width: 480px;
+     margin: 0 auto;
+     min-height: 100vh;
+     padding: 22px 20px 104px;
+     position: relative;
+   }
+   
+   /* 상단 헤더 — 로고의 "네이비 글자 + 그린 점" 조합 그대로 */
+   .top {
+     display: flex;
+     align-items: baseline;
+     justify-content: space-between;
+     margin-bottom: 18px;
+   }
+   
+   .top h1 {
+     font-size: 24px;
+     font-weight: 900;
+     margin: 0;
+     color: var(--navy);
+   }
+   
+   .top .sub {
+     font-size: 14px;
+     color: var(--ink-soft);
+   }
+   
+   .brand {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     margin-bottom: 6px;
+   }
+   
+   .brand .dot {
+     width: 12px;
+     height: 12px;
+     border-radius: 50%;
+     background: var(--green);
+   }
+   
+   .brand span.name {
+     font-size: 14px;
+     font-weight: 700;
+     color: var(--navy);
+     letter-spacing: 0.01em;
+   }
+   
+   /* 카드 */
+   .card {
+     background: var(--card);
+     border: 1px solid var(--line);
+     border-radius: var(--radius);
+     box-shadow: var(--shadow);
+     padding: 20px;
+     margin-bottom: 16px;
+   }
+   
+   .card h2 {
+     font-size: 15px;
+     font-weight: 700;
+     color: var(--navy);
+     margin: 0 0 12px;
+   }
+   
+   /* 오늘 요약 카드 — 로고처럼 흰 바탕 + 그린 원형 배지 */
+   .today-card {
+     background: #fff;
+     border: 1px solid var(--line);
+     border-radius: var(--radius);
+     box-shadow: var(--shadow);
+     padding: 26px 22px;
+     margin-bottom: 18px;
+     text-align: center;
+   }
+   
+   .today-card .label {
+     font-size: 14px;
+     color: var(--ink-soft);
+     font-weight: 700;
+     margin-bottom: 16px;
+   }
+   
+   .ring-wrap {
+     position: relative;
+     width: 168px;
+     height: 168px;
+     margin: 0 auto 18px;
+   }
+   
+   .ring-wrap svg {
+     width: 100%;
+     height: 100%;
+     transform: rotate(-90deg);
+   }
+   
+   .ring-bg {
+     fill: none;
+     stroke: var(--navy-soft);
+     stroke-width: 14;
+   }
+   
+   .ring-fg {
+     fill: none;
+     stroke: var(--green);
+     stroke-width: 14;
+     stroke-linecap: round;
+   }
+   
+   .ring-center {
+     position: absolute;
+     inset: 0;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+   }
+   
+   .ring-center .percent {
+     font-size: 40px;
+     font-weight: 900;
+     color: var(--navy);
+     line-height: 1;
+   }
+   
+   .ring-center .percent-caption {
+     font-size: 12px;
+     color: var(--ink-soft);
+     margin-top: 4px;
+   }
+   
+   .today-card .detail {
+     display: flex;
+     justify-content: center;
+     gap: 28px;
+     font-size: 14px;
+     color: var(--ink-soft);
+     padding-top: 16px;
+     border-top: 1px solid var(--line);
+   }
+   
+   .today-card .detail b {
+     font-size: 20px;
+     font-weight: 900;
+     color: var(--navy);
+     display: block;
+     margin-bottom: 2px;
+   }
+   
+   /* 리스트 */
+   .list-item {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     padding: 14px 0;
+     border-bottom: 1px solid var(--line);
+   }
+   
+   .list-item:last-child { border-bottom: none; }
+   
+   .list-item .date {
+     font-size: 16px;
+     font-weight: 700;
+     min-width: 66px;
+     color: var(--ink);
+   }
+   
+   .list-item .nums {
+     font-size: 14px;
+     color: var(--ink-soft);
+     flex: 1;
+     padding: 0 10px;
+   }
+   
+   .list-item .pct {
+     font-size: 18px;
+     font-weight: 900;
+     color: var(--navy);
+     min-width: 54px;
+     text-align: right;
+   }
+   
+   /* 버튼 — 크고 명확하게. 그린은 포인트로만 사용 */
+   .btn {
+     display: block;
+     width: 100%;
+     text-align: center;
+     text-decoration: none;
+     padding: 18px;
+     border-radius: 14px;
+     font-size: 17px;
+     font-weight: 700;
+     border: none;
+     cursor: pointer;
+     box-sizing: border-box;
+   }
+   
+   .btn-primary {
+     background: var(--navy);
+     color: #fff;
+   }
+   
+   .btn-secondary {
+     background: #fff;
+     color: var(--navy);
+     border: 2px solid var(--navy);
+   }
+   
+   .btn-row {
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 10px;
+     margin-top: 4px;
+   }
+   
+   /* 하단 네비 */
+   .nav-bottom {
+     position: fixed;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     background: var(--card);
+     border-top: 1px solid var(--line);
+     display: flex;
+     max-width: 480px;
+     margin: 0 auto;
+   }
+   
+   .nav-bottom a {
+     flex: 1;
+     text-align: center;
+     padding: 12px 0 10px;
+     text-decoration: none;
+     color: var(--ink-soft);
+     font-size: 13px;
+     font-weight: 700;
+   }
+   
+   .nav-bottom a.active {
+     color: var(--navy);
+   }
+   
+   .nav-bottom a.active .icon {
+     color: var(--green);
+   }
+   
+   .nav-bottom a .icon {
+     display: block;
+     font-size: 22px;
+     margin-bottom: 3px;
+   }
+   
+   /* 폼 */
+   .field {
+     margin-bottom: 20px;
+   }
+   
+   .field label {
+     display: block;
+     font-size: 15px;
+     font-weight: 700;
+     color: var(--ink);
+     margin-bottom: 8px;
+   }
+   
+   .field input {
+     width: 100%;
+     padding: 16px;
+     border: 2px solid var(--line);
+     border-radius: 12px;
+     font-size: 19px;
+     font-family: inherit;
+     color: var(--ink);
+     background: #FFFFFF;
+   }
+   
+   .field input:focus {
+     outline: none;
+     border-color: var(--navy);
+   }
+   
+   .result-box {
+     background: var(--navy-soft);
+     border-radius: 14px;
+     padding: 20px;
+     text-align: center;
+     margin-bottom: 22px;
+     border: 2px solid var(--green);
+   }
+   
+   .result-box .num {
+     font-size: 44px;
+     font-weight: 900;
+     color: var(--navy);
+   }
+   
+   .result-box .caption {
+     font-size: 13px;
+     color: var(--ink-soft);
+     margin-top: 4px;
+   }
+   
+   .notice {
+     font-size: 13px;
+     color: var(--ink-soft);
+     background: var(--navy-soft);
+     border-radius: 10px;
+     padding: 12px 14px;
+     margin-bottom: 16px;
+     line-height: 1.6;
+   }
+   
+   /* 탭 */
+   .tabs {
+     display: flex;
+     gap: 8px;
+     margin-bottom: 16px;
+   }
+   
+   .tabs .tab {
+     flex: 1;
+     text-align: center;
+     padding: 11px 0;
+     border-radius: 10px;
+     font-size: 14px;
+     font-weight: 700;
+     color: var(--ink-soft);
+     background: var(--card);
+     border: 1px solid var(--line);
+   }
+   
+   .tabs .tab.active {
+     background: var(--navy);
+     color: #fff;
+     border-color: var(--navy);
+   }
+   
+   /* 차트 테이블 */
+   table.data-table {
+     width: 100%;
+     border-collapse: collapse;
+     font-size: 14px;
+   }
+   
+   table.data-table th, table.data-table td {
+     text-align: left;
+     padding: 11px 4px;
+     border-bottom: 1px solid var(--line);
+     color: var(--ink);
+   }
+   
+   table.data-table th {
+     color: var(--ink-soft);
+     font-weight: 700;
+     font-size: 13px;
+   }
+   
+   table.data-table td.pct {
+     font-weight: 900;
+     color: var(--navy);
+     text-align: right;
+   }
+   table.data-table th:last-child { text-align: right; }
+   
+   .chart-wrap {
+     background: var(--card);
+     border: 1px solid var(--line);
+     border-radius: var(--radius);
+     box-shadow: var(--shadow);
+     padding: 20px 16px;
+     margin-bottom: 16px;
+   }

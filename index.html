@@ -21,10 +21,23 @@
   <!-- 오늘 요약 -->
   <div class="today-card">
     <div class="label">오늘 만실률</div>
-    <div class="percent">75%</div>
+
+    <div class="ring-wrap">
+      <svg viewBox="0 0 120 120">
+        <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+        <circle class="ring-fg" cx="60" cy="60" r="52"
+                stroke-dasharray="241.8 326.7"></circle>
+      </svg>
+      <div class="ring-center">
+        <div class="percent">74%</div>
+        <div class="percent-caption">20 / 27</div>
+      </div>
+    </div>
+
     <div class="detail">
-      <div><b>15 / 20</b>예약된 사이트</div>
-      <div><b>5</b>남은 사이트</div>
+      <div><b>20</b>예약된 사이트</div>
+      <div><b>7</b>남은 사이트</div>
+      <div><b>27</b>전체 사이트</div>
     </div>
   </div>
 
@@ -39,20 +52,20 @@
 
     <div class="list-item">
       <div class="date">09.20</div>
-      <div class="nums">예약가능 20 · 예약됨 15</div>
-      <div class="pct">75%</div>
+      <div class="nums">예약가능 27 · 예약됨 20</div>
+      <div class="pct">74%</div>
     </div>
 
     <div class="list-item">
       <div class="date">09.19</div>
-      <div class="nums">예약가능 20 · 예약됨 12</div>
-      <div class="pct">60%</div>
+      <div class="nums">예약가능 27 · 예약됨 16</div>
+      <div class="pct">59%</div>
     </div>
 
     <div class="list-item">
       <div class="date">09.18</div>
-      <div class="nums">예약가능 20 · 예약됨 18</div>
-      <div class="pct">90%</div>
+      <div class="nums">예약가능 27 · 예약됨 24</div>
+      <div class="pct">89%</div>
     </div>
 
   </div>
