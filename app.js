@@ -18,11 +18,11 @@ async function fetchRecords() {
 }
 
 /** 기록 하나를 저장(같은 날짜면 덮어쓰기)합니다. CORS 회피를 위해 text/plain으로 보냅니다. */
-async function saveRecord(date, available, reserved) {
+async function saveRecord(date, available, reserved, checkins, inUse) {
   const res = await fetch(WEBAPP_URL, {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify({ date, available, reserved }),
+    body: JSON.stringify({ date, available, reserved, checkins, inUse }),
   });
   const data = await res.json();
   if (!data.ok) throw new Error(data.error || "저장 실패");

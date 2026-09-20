@@ -39,6 +39,16 @@
       <input type="number" id="reservedInput" min="0">
     </div>
 
+    <div class="field">
+      <label>입실 수 (오늘 체크인)</label>
+      <input type="number" id="checkinsInput" min="0" value="0">
+    </div>
+
+    <div class="field">
+      <label>이용중 수 (지금 머무는 중)</label>
+      <input type="number" id="inUseInput" min="0" value="0">
+    </div>
+
     <div class="result-box">
       <div class="num" id="resultPercent">0%</div>
       <div class="caption">자동 계산된 만실률 (예약됨 ÷ 예약가능)</div>
@@ -63,6 +73,8 @@
   const dateInput = document.getElementById("dateInput");
   const availableInput = document.getElementById("availableInput");
   const reservedInput = document.getElementById("reservedInput");
+  const checkinsInput = document.getElementById("checkinsInput");
+  const inUseInput = document.getElementById("inUseInput");
   const resultPercent = document.getElementById("resultPercent");
   const saveBtn = document.getElementById("saveBtn");
   const notice = document.getElementById("notice");
@@ -101,16 +113,19 @@
     const date = dateInput.value;
     const available = Number(availableInput.value);
     const reserved = Number(reservedInput.value);
+    const checkins = Number(checkinsInput.value) || 0;
+    const inUse = Number(inUseInput.value) || 0;
 
     if (!date) { alert("날짜를 선택해 주세요."); return; }
     if (!available || available <= 0) { alert("예약가능 사이트 개수를 입력해 주세요."); return; }
     if (reserved < 0 || reserved > available) { alert("예약된 사이트 개수를 확인해 주세요."); return; }
+    if (checkins < 0 || inUse < 0) { alert("입실 수 / 이용중 수를 확인해 주세요."); return; }
 
     saveBtn.disabled = true;
     saveBtn.textContent = "저장 중…";
 
     try {
-      await saveRecord(date, available, reserved);
+      await saveRecord(date, available, reserved, checkins, inUse);
       notice.textContent = "저장됐어요! 홈 화면으로 이동합니다.";
       notice.style.background = "var(--green-soft)";
       setTimeout(function () { window.location.href = "index.html"; }, 700);

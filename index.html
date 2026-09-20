@@ -15,12 +15,19 @@
   </div>
   <div class="top">
     <h1>예약 현황</h1>
-    <span class="sub" id="todaySub">불러오는 중…</span>
+    <span class="sub" id="loadingSub">불러오는 중…</span>
   </div>
 
-  <!-- 오늘 요약 -->
-  <div class="today-card" id="todayCard">
-    <div class="label">오늘 만실률</div>
+  <!-- 날짜 이동 -->
+  <div class="date-nav" id="dateNav" style="display:none;">
+    <button id="prevBtn" type="button">◀</button>
+    <div class="date-label" id="dateLabel">-</div>
+    <button id="nextBtn" type="button">▶</button>
+  </div>
+
+  <!-- 선택한 날짜 요약 -->
+  <div class="today-card" id="todayCard" style="display:none;">
+    <div class="label">만실률</div>
 
     <div class="ring-wrap">
       <svg viewBox="0 0 120 120">
@@ -34,10 +41,11 @@
       </div>
     </div>
 
-    <div class="detail">
-      <div><b id="statReserved">-</b>예약된 사이트</div>
-      <div><b id="statRemain">-</b>남은 사이트</div>
-      <div><b id="statTotal">-</b>전체 사이트</div>
+    <div class="stat-grid">
+      <div class="stat-tile"><div class="num" id="statReserved">-</div><div class="label">예약된 사이트</div></div>
+      <div class="stat-tile"><div class="num" id="statRemain">-</div><div class="label">남은 사이트</div></div>
+      <div class="stat-tile"><div class="num" id="statCheckins">-</div><div class="label">입실 수</div></div>
+      <div class="stat-tile"><div class="num" id="statInUse">-</div><div class="label">이용중 수</div></div>
     </div>
   </div>
 
@@ -69,15 +77,17 @@
 <script src="app.js"></script>
 <script>
   const RING_CIRCUMFERENCE = 326.7;
+  let records = []; // 최신순 (records[0]이 가장 최근 날짜)
+  let currentIndex = 0;
 
-  function renderToday(record) {
-    if (!record) {
-      document.getElementById("todaySub").textContent = "아직 기록이 없어요";
-      document.getElementById("ringCaption").textContent = "0 / " + TOTAL_SITES;
-      document.getElementById("statTotal").textContent = TOTAL_SITES;
-      return;
-    }
-    document.getElementById("todaySub").textContent = shortDate(record.date) + " 기준";
+  function renderRecord() {
+    const record = records[currentIndex];
+    if (!record) return;
+
+    document.getElementById("dateLabel").textContent = shortDate(record.date);
+    document.getElementById("prevBtn").disabled = currentIndex >= records.length - 1; // 더 오래된 기록 없음
+    document.getElementById("nextBtn").disabled = currentIndex <= 0; // 더 최신 기록 없음
+
     document.getElementById("ringPercent").textContent = record.percent + "%";
     document.getElementById("ringCaption").textContent = record.reserved + " / " + record.available;
     document.getElementById("ringFg").setAttribute(
@@ -86,36 +96,58 @@
     );
     document.getElementById("statReserved").textContent = record.reserved;
     document.getElementById("statRemain").textContent = Math.max(record.available - record.reserved, 0);
-    document.getElementById("statTotal").textContent = record.available;
+    document.getElementById("statCheckins").textContent = record.checkins;
+    document.getElementById("statInUse").textContent = record.inUse;
   }
 
-  function renderRecentList(records) {
+  function renderRecentList() {
     const wrap = document.getElementById("recentList");
     if (!records.length) {
       wrap.innerHTML = '<div class="list-item"><div class="nums">아직 기록이 없어요. "새로 기록하기"로 첫 기록을 남겨보세요.</div></div>';
       return;
     }
-    wrap.innerHTML = records.slice(0, 7).map(function (r) {
+    wrap.innerHTML = records.slice(0, 7).map(function (r, i) {
       return (
-        '<div class="list-item">' +
+        '<div class="list-item" data-index="' + i + '" style="cursor:pointer;">' +
           '<div class="date">' + shortDate(r.date) + '</div>' +
           '<div class="nums">예약가능 ' + r.available + ' · 예약됨 ' + r.reserved + '</div>' +
           '<div class="pct">' + r.percent + '%</div>' +
         '</div>'
       );
     }).join("");
+    wrap.querySelectorAll(".list-item[data-index]").forEach(function (el) {
+      el.addEventListener("click", function () {
+        currentIndex = Number(el.dataset.index);
+        renderRecord();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
   }
 
   async function init() {
     try {
-      const records = await fetchRecords(); // 최신순 정렬됨
-      renderToday(records[0]);
-      renderRecentList(records);
+      records = await fetchRecords(); // 최신순 정렬됨
+      document.getElementById("loadingSub").style.display = "none";
+
+      if (records.length) {
+        document.getElementById("dateNav").style.display = "flex";
+        document.getElementById("todayCard").style.display = "block";
+        renderRecord();
+      }
+      renderRecentList();
     } catch (err) {
+      console.error(err);
       document.getElementById("errorNotice").style.display = "block";
-      document.getElementById("todaySub").textContent = "";
+      document.getElementById("loadingSub").textContent = "";
     }
   }
+
+  document.getElementById("prevBtn").addEventListener("click", function () {
+    if (currentIndex < records.length - 1) { currentIndex++; renderRecord(); }
+  });
+  document.getElementById("nextBtn").addEventListener("click", function () {
+    if (currentIndex > 0) { currentIndex--; renderRecord(); }
+  });
 
   init();
 </script>
