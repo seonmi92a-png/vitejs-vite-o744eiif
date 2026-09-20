@@ -4,7 +4,7 @@
  */
 
 // 배포된 Apps Script 웹앱 주소
-const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyL7GelOXXZNcCW7DyTfu5sYuMlQ7JsOeKFDtnoQ9zU98JtPyBQUaSgCgMX44E46H9o/exec";
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzzHH0hGLeqGmCRChqza-aTwsJb3BvIs180gqP-RaSFYhW88YiztpIT2x_dkT5h_Un3qg/exec";
 
 // 캠핑장 전체 사이트 개수 (기본값)
 const TOTAL_SITES = 27;
