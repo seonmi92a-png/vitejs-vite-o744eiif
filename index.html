@@ -15,29 +15,29 @@
   </div>
   <div class="top">
     <h1>예약 현황</h1>
-    <span class="sub">2026.09.20 기준</span>
+    <span class="sub" id="todaySub">불러오는 중…</span>
   </div>
 
   <!-- 오늘 요약 -->
-  <div class="today-card">
+  <div class="today-card" id="todayCard">
     <div class="label">오늘 만실률</div>
 
     <div class="ring-wrap">
       <svg viewBox="0 0 120 120">
         <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
-        <circle class="ring-fg" cx="60" cy="60" r="52"
-                stroke-dasharray="241.8 326.7"></circle>
+        <circle class="ring-fg" id="ringFg" cx="60" cy="60" r="52"
+                stroke-dasharray="0 326.7"></circle>
       </svg>
       <div class="ring-center">
-        <div class="percent">74%</div>
-        <div class="percent-caption">20 / 27</div>
+        <div class="percent" id="ringPercent">-</div>
+        <div class="percent-caption" id="ringCaption">- / -</div>
       </div>
     </div>
 
     <div class="detail">
-      <div><b>20</b>예약된 사이트</div>
-      <div><b>7</b>남은 사이트</div>
-      <div><b>27</b>전체 사이트</div>
+      <div><b id="statReserved">-</b>예약된 사이트</div>
+      <div><b id="statRemain">-</b>남은 사이트</div>
+      <div><b id="statTotal">-</b>전체 사이트</div>
     </div>
   </div>
 
@@ -49,29 +49,13 @@
   <!-- 최근 기록 -->
   <div class="card" style="margin-top:20px;">
     <h2>최근 기록</h2>
-
-    <div class="list-item">
-      <div class="date">09.20</div>
-      <div class="nums">예약가능 27 · 예약됨 20</div>
-      <div class="pct">74%</div>
+    <div id="recentList">
+      <div class="list-item"><div class="nums">불러오는 중…</div></div>
     </div>
-
-    <div class="list-item">
-      <div class="date">09.19</div>
-      <div class="nums">예약가능 27 · 예약됨 16</div>
-      <div class="pct">59%</div>
-    </div>
-
-    <div class="list-item">
-      <div class="date">09.18</div>
-      <div class="nums">예약가능 27 · 예약됨 24</div>
-      <div class="pct">89%</div>
-    </div>
-
   </div>
 
-  <div class="notice">
-    지금 보시는 화면은 예시 데이터로 만든 화면 구성 초안입니다. 저장 기능은 다음 단계에서 추가할 예정이에요.
+  <div class="notice" id="errorNotice" style="display:none;">
+    데이터를 불러오지 못했어요. 잠시 후 다시 열어봐 주세요.
   </div>
 
 </div>
@@ -81,6 +65,60 @@
   <a href="write.html"><span class="icon">✏️</span>기록하기</a>
   <a href="chart.html"><span class="icon">📈</span>그래프</a>
 </div>
+
+<script src="app.js"></script>
+<script>
+  const RING_CIRCUMFERENCE = 326.7;
+
+  function renderToday(record) {
+    if (!record) {
+      document.getElementById("todaySub").textContent = "아직 기록이 없어요";
+      document.getElementById("ringCaption").textContent = "0 / " + TOTAL_SITES;
+      document.getElementById("statTotal").textContent = TOTAL_SITES;
+      return;
+    }
+    document.getElementById("todaySub").textContent = shortDate(record.date) + " 기준";
+    document.getElementById("ringPercent").textContent = record.percent + "%";
+    document.getElementById("ringCaption").textContent = record.reserved + " / " + record.available;
+    document.getElementById("ringFg").setAttribute(
+      "stroke-dasharray",
+      (RING_CIRCUMFERENCE * record.percent / 100).toFixed(1) + " " + RING_CIRCUMFERENCE
+    );
+    document.getElementById("statReserved").textContent = record.reserved;
+    document.getElementById("statRemain").textContent = Math.max(record.available - record.reserved, 0);
+    document.getElementById("statTotal").textContent = record.available;
+  }
+
+  function renderRecentList(records) {
+    const wrap = document.getElementById("recentList");
+    if (!records.length) {
+      wrap.innerHTML = '<div class="list-item"><div class="nums">아직 기록이 없어요. "새로 기록하기"로 첫 기록을 남겨보세요.</div></div>';
+      return;
+    }
+    wrap.innerHTML = records.slice(0, 7).map(function (r) {
+      return (
+        '<div class="list-item">' +
+          '<div class="date">' + shortDate(r.date) + '</div>' +
+          '<div class="nums">예약가능 ' + r.available + ' · 예약됨 ' + r.reserved + '</div>' +
+          '<div class="pct">' + r.percent + '%</div>' +
+        '</div>'
+      );
+    }).join("");
+  }
+
+  async function init() {
+    try {
+      const records = await fetchRecords(); // 최신순 정렬됨
+      renderToday(records[0]);
+      renderRecentList(records);
+    } catch (err) {
+      document.getElementById("errorNotice").style.display = "block";
+      document.getElementById("todaySub").textContent = "";
+    }
+  }
+
+  init();
+</script>
 
 </body>
 </html>

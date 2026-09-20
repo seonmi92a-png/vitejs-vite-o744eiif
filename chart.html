@@ -18,60 +18,17 @@
     <span class="sub">&nbsp;</span>
   </div>
 
-  <div class="notice">
-    아래 그래프와 표는 화면 구성 확인을 위한 예시 데이터입니다.
-  </div>
+  <div class="notice" id="notice">불러오는 중…</div>
 
   <div class="tabs">
-    <div class="tab">1개월</div>
-    <div class="tab active">3개월</div>
-    <div class="tab">전체</div>
+    <div class="tab" data-days="30">1개월</div>
+    <div class="tab" data-days="90">3개월</div>
+    <div class="tab active" data-days="all">전체</div>
   </div>
 
   <div class="chart-wrap">
     <h2 style="margin-bottom:14px;">날짜별 만실률 (%)</h2>
-
-    <svg viewBox="0 0 320 170" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
-      <!-- 그리드 라인 -->
-      <line x1="20" y1="20"  x2="300" y2="20"  stroke="#E7E9EE" stroke-width="1"/>
-      <line x1="20" y1="50"  x2="300" y2="50"  stroke="#E7E9EE" stroke-width="1"/>
-      <line x1="20" y1="80"  x2="300" y2="80"  stroke="#E7E9EE" stroke-width="1"/>
-      <line x1="20" y1="110" x2="300" y2="110" stroke="#E7E9EE" stroke-width="1"/>
-      <line x1="20" y1="140" x2="300" y2="140" stroke="#6B7280" stroke-width="1"/>
-
-      <!-- y축 라벨 -->
-      <text x="0" y="24"  font-size="10" fill="#6B7280">100</text>
-      <text x="8" y="54"  font-size="10" fill="#6B7280">75</text>
-      <text x="8" y="84"  font-size="10" fill="#6B7280">50</text>
-      <text x="8" y="114" font-size="10" fill="#6B7280">25</text>
-      <text x="12" y="144" font-size="10" fill="#6B7280">0</text>
-
-      <!-- 영역 채우기 -->
-      <path d="M20,73 66.7,56 113.3,64 160,46 206.7,33 253.3,69 300,51 300,140 20,140 Z"
-            fill="#2E3192" opacity="0.08"/>
-
-      <!-- 선 -->
-      <polyline points="20,73 66.7,56 113.3,64 160,46 206.7,33 253.3,69 300,51"
-                fill="none" stroke="#2E3192" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-
-      <!-- 점 -->
-      <circle cx="20"    cy="73" r="3.5" fill="#1CA94E"/>
-      <circle cx="66.7"  cy="56" r="3.5" fill="#1CA94E"/>
-      <circle cx="113.3" cy="64" r="3.5" fill="#1CA94E"/>
-      <circle cx="160"   cy="46" r="3.5" fill="#1CA94E"/>
-      <circle cx="206.7" cy="33" r="3.5" fill="#1CA94E"/>
-      <circle cx="253.3" cy="69" r="3.5" fill="#1CA94E"/>
-      <circle cx="300"   cy="51" r="4.5" fill="#1CA94E" stroke="#fff" stroke-width="1.5"/>
-
-      <!-- x축 라벨 -->
-      <text x="14"  y="158" font-size="9.5" fill="#6B7280">09.14</text>
-      <text x="58"  y="158" font-size="9.5" fill="#6B7280">09.15</text>
-      <text x="105" y="158" font-size="9.5" fill="#6B7280">09.16</text>
-      <text x="152" y="158" font-size="9.5" fill="#6B7280">09.17</text>
-      <text x="196" y="158" font-size="9.5" fill="#6B7280">09.18</text>
-      <text x="242" y="158" font-size="9.5" fill="#6B7280">09.19</text>
-      <text x="288" y="158" font-size="9.5" fill="#6B7280">09.20</text>
-    </svg>
+    <div id="chartSvgWrap"></div>
   </div>
 
   <div class="card">
@@ -80,14 +37,8 @@
       <thead>
         <tr><th>날짜</th><th>예약가능</th><th>예약됨</th><th>만실%</th></tr>
       </thead>
-      <tbody>
-        <tr><td>09.20</td><td>27</td><td>20</td><td class="pct">74%</td></tr>
-        <tr><td>09.19</td><td>27</td><td>16</td><td class="pct">59%</td></tr>
-        <tr><td>09.18</td><td>27</td><td>24</td><td class="pct">89%</td></tr>
-        <tr><td>09.17</td><td>27</td><td>21</td><td class="pct">78%</td></tr>
-        <tr><td>09.16</td><td>27</td><td>17</td><td class="pct">63%</td></tr>
-        <tr><td>09.15</td><td>27</td><td>19</td><td class="pct">70%</td></tr>
-        <tr><td>09.14</td><td>27</td><td>15</td><td class="pct">56%</td></tr>
+      <tbody id="tableBody">
+        <tr><td colspan="4">불러오는 중…</td></tr>
       </tbody>
     </table>
   </div>
@@ -99,6 +50,108 @@
   <a href="write.html"><span class="icon">✏️</span>기록하기</a>
   <a href="chart.html" class="active"><span class="icon">📈</span>그래프</a>
 </div>
+
+<script src="app.js"></script>
+<script>
+  let allRecords = []; // 최신순 (서버에서 내려주는 순서)
+
+  function filterByPeriod(records, days) {
+    if (days === "all" || !records.length) return records;
+    const latest = new Date(records[0].date);
+    const cutoff = new Date(latest);
+    cutoff.setDate(cutoff.getDate() - Number(days));
+    return records.filter(function (r) { return new Date(r.date) >= cutoff; });
+  }
+
+  function renderTable(recordsDesc) {
+    const body = document.getElementById("tableBody");
+    if (!recordsDesc.length) {
+      body.innerHTML = '<tr><td colspan="4">해당 기간에 기록이 없어요.</td></tr>';
+      return;
+    }
+    body.innerHTML = recordsDesc.map(function (r) {
+      return (
+        "<tr><td>" + shortDate(r.date) + "</td><td>" + r.available +
+        "</td><td>" + r.reserved + '</td><td class="pct">' + r.percent + "%</td></tr>"
+      );
+    }).join("");
+  }
+
+  function renderChart(recordsDesc) {
+    const wrap = document.getElementById("chartSvgWrap");
+    const records = recordsDesc.slice().reverse(); // 날짜 오름차순으로 그려야 함
+    if (records.length === 0) {
+      wrap.innerHTML = '<p style="color:var(--ink-soft); font-size:14px; text-align:center; padding:30px 0;">표시할 데이터가 없어요.</p>';
+      return;
+    }
+
+    const left = 28, right = 306, top = 16, bottom = 140;
+    const n = records.length;
+    const xAt = function (i) { return n === 1 ? (left + right) / 2 : left + (i * (right - left)) / (n - 1); };
+    const yAt = function (pct) { return bottom - (pct / 100) * (bottom - top); };
+
+    const points = records.map(function (r, i) { return xAt(i) + "," + yAt(r.percent); });
+    const lineStr = points.join(" ");
+    const areaStr = "M" + points.join(" ") + " " + right + "," + bottom + " " + left + "," + bottom + " Z";
+
+    // 라벨은 최대 7개까지만, 많으면 일정 간격으로 골라서 표시
+    const maxLabels = 7;
+    const step = Math.max(1, Math.ceil(n / maxLabels));
+
+    let svg = '<svg viewBox="0 0 320 170" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">';
+
+    // 그리드
+    [0, 25, 50, 75, 100].forEach(function (v) {
+      const y = yAt(v);
+      svg += '<line x1="' + left + '" y1="' + y + '" x2="' + right + '" y2="' + y +
+             '" stroke="' + (v === 0 ? "#6B7280" : "#E7E9EE") + '" stroke-width="1"/>';
+      svg += '<text x="2" y="' + (y + 3) + '" font-size="10" fill="#6B7280">' + v + '</text>';
+    });
+
+    if (n > 1) {
+      svg += '<path d="' + areaStr + '" fill="#2E3192" opacity="0.08"/>';
+      svg += '<polyline points="' + lineStr + '" fill="none" stroke="#2E3192" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>';
+    }
+
+    records.forEach(function (r, i) {
+      const isLast = i === n - 1;
+      svg += '<circle cx="' + xAt(i) + '" cy="' + yAt(r.percent) + '" r="' + (isLast ? 4.5 : 3.5) +
+             '" fill="#1CA94E"' + (isLast ? ' stroke="#fff" stroke-width="1.5"' : "") + '/>';
+      if (i % step === 0 || isLast) {
+        svg += '<text x="' + (xAt(i) - 12) + '" y="158" font-size="9.5" fill="#6B7280">' + shortDate(r.date) + '</text>';
+      }
+    });
+
+    svg += "</svg>";
+    wrap.innerHTML = svg;
+  }
+
+  function renderPeriod(days) {
+    const filtered = filterByPeriod(allRecords, days);
+    renderTable(filtered);
+    renderChart(filtered);
+  }
+
+  document.querySelectorAll(".tab").forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      document.querySelectorAll(".tab").forEach(function (t) { t.classList.remove("active"); });
+      tab.classList.add("active");
+      renderPeriod(tab.dataset.days);
+    });
+  });
+
+  async function init() {
+    try {
+      allRecords = await fetchRecords();
+      document.getElementById("notice").style.display = "none";
+      renderPeriod("all");
+    } catch (err) {
+      document.getElementById("notice").textContent = "데이터를 불러오지 못했어요. 잠시 후 다시 열어봐 주세요.";
+    }
+  }
+
+  init();
+</script>
 
 </body>
 </html>
