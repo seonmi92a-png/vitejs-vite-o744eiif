@@ -67,9 +67,15 @@
   const saveBtn = document.getElementById("saveBtn");
   const notice = document.getElementById("notice");
 
-  // 기본값: 오늘 날짜 / 전체 사이트 개수
-  dateInput.value = todayStr();
-  availableInput.value = TOTAL_SITES;
+  // app.js가 같은 폴더에 없거나 제대로 안 불러와졌으면 여기서 바로 알려줌
+  if (typeof WEBAPP_URL === "undefined") {
+    notice.textContent = "app.js 파일을 index.html / write.html과 같은 폴더에 넣어주세요.";
+    notice.style.background = "#FDEBEB";
+  } else {
+    // 기본값: 오늘 날짜 / 전체 사이트 개수
+    dateInput.value = todayStr();
+    availableInput.value = TOTAL_SITES;
+  }
 
   function updatePercent() {
     const available = Number(availableInput.value);
@@ -87,6 +93,11 @@
   updatePercent();
 
   saveBtn.addEventListener("click", async function () {
+    if (typeof WEBAPP_URL === "undefined") {
+      alert("app.js 파일이 없어서 저장할 수 없어요. index.html / write.html과 같은 폴더에 app.js가 있는지 확인해 주세요.");
+      return;
+    }
+
     const date = dateInput.value;
     const available = Number(availableInput.value);
     const reserved = Number(reservedInput.value);
@@ -104,7 +115,8 @@
       notice.style.background = "var(--green-soft)";
       setTimeout(function () { window.location.href = "index.html"; }, 700);
     } catch (err) {
-      alert("저장 중 문제가 발생했어요. 다시 시도해 주세요.");
+      console.error(err);
+      alert("저장 중 문제가 발생했어요: " + (err && err.message ? err.message : "알 수 없는 오류") + "\n\n브라우저 개발자도구(F12) > Console 탭을 확인해 주세요.");
       saveBtn.disabled = false;
       saveBtn.textContent = "저장하기";
     }
