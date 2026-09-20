@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>새 기록 | 마중마을힐링캠프</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+
+  <div class="brand">
+    <span class="dot"></span>
+    <span class="name">마중마을힐링캠프</span>
+  </div>
+  <div class="top">
+    <h1>새로 기록하기</h1>
+    <span class="sub">&nbsp;</span>
+  </div>
+
+  <div class="notice">
+    지금은 화면 모습만 보는 단계라 실제로 저장되지는 않아요. 아래는 예시로 채워둔 값입니다.
+  </div>
+
+  <div class="card">
+
+    <div class="field">
+      <label>날짜</label>
+      <input type="date" value="2026-09-20">
+    </div>
+
+    <div class="field">
+      <label>예약가능 사이트 개수</label>
+      <input type="number" value="20">
+    </div>
+
+    <div class="field">
+      <label>예약된 사이트 개수</label>
+      <input type="number" value="15">
+    </div>
+
+    <div class="result-box">
+      <div class="num">75%</div>
+      <div class="caption">자동 계산된 만실률 (예약됨 ÷ 예약가능)</div>
+    </div>
+
+    <button class="btn btn-primary" type="button" disabled style="opacity:0.5; cursor:not-allowed;">저장하기 (다음 단계에서 연결 예정)</button>
+
+  </div>
+
+  <a href="index.html" class="btn btn-secondary" style="margin-top:8px;">← 홈으로 돌아가기</a>
+
+</div>
+
+<div class="nav-bottom">
+  <a href="index.html"><span class="icon">🏠</span>홈</a>
+  <a href="write.html" class="active"><span class="icon">✏️</span>기록하기</a>
+  <a href="chart.html"><span class="icon">📈</span>그래프</a>
+</div>
+
+</body>
+</html>
