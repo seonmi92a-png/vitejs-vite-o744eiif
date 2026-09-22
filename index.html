@@ -43,7 +43,6 @@
 
     <div class="stat-grid">
       <div class="stat-tile"><div class="num" id="statReserved">-</div><div class="label">예약된 사이트</div></div>
-      <div class="stat-tile"><div class="num" id="statRemain">-</div><div class="label">남은 사이트</div></div>
       <div class="stat-tile"><div class="num" id="statCheckins">-</div><div class="label">입실 수</div></div>
       <div class="stat-tile"><div class="num" id="statCheckouts">-</div><div class="label">퇴실 수</div></div>
       <div class="stat-tile"><div class="num" id="statInUse">-</div><div class="label">이용중 수</div></div>
@@ -96,7 +95,6 @@
       (RING_CIRCUMFERENCE * record.percent / 100).toFixed(1) + " " + RING_CIRCUMFERENCE
     );
     document.getElementById("statReserved").textContent = record.reserved;
-    document.getElementById("statRemain").textContent = Math.max(record.available - record.reserved, 0);
     document.getElementById("statCheckins").textContent = record.checkins;
     document.getElementById("statInUse").textContent = record.inUse;
     document.getElementById("statCheckouts").textContent = record.checkouts;
