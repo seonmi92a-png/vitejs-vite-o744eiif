@@ -30,11 +30,6 @@
     </div>
 
     <div class="field">
-      <label>예약가능 사이트 개수</label>
-      <input type="number" id="availableInput" min="1">
-    </div>
-
-    <div class="field">
       <label>예약된 사이트 개수</label>
       <input type="number" id="reservedInput" min="0">
     </div>
@@ -45,13 +40,18 @@
     </div>
 
     <div class="field">
+      <label>퇴실 수 (오늘 체크아웃)</label>
+      <input type="number" id="checkoutsInput" min="0" value="0">
+    </div>
+
+    <div class="field">
       <label>이용중 수 (지금 머무는 중)</label>
       <input type="number" id="inUseInput" min="0" value="0">
     </div>
 
     <div class="result-box">
       <div class="num" id="resultPercent">0%</div>
-      <div class="caption">자동 계산된 만실률 (예약됨 ÷ 예약가능)</div>
+      <div class="caption">자동 계산된 만실률</div>
     </div>
 
     <button class="btn btn-primary" id="saveBtn" type="button">저장하기</button>
@@ -71,9 +71,9 @@
 <script src="app.js"></script>
 <script>
   const dateInput = document.getElementById("dateInput");
-  const availableInput = document.getElementById("availableInput");
   const reservedInput = document.getElementById("reservedInput");
   const checkinsInput = document.getElementById("checkinsInput");
+  const checkoutsInput = document.getElementById("checkoutsInput");
   const inUseInput = document.getElementById("inUseInput");
   const resultPercent = document.getElementById("resultPercent");
   const saveBtn = document.getElementById("saveBtn");
@@ -84,13 +84,13 @@
     notice.textContent = "app.js 파일을 index.html / write.html과 같은 폴더에 넣어주세요.";
     notice.style.background = "#FDEBEB";
   } else {
-    // 기본값: 오늘 날짜 / 전체 사이트 개수
+    // 기본값: 오늘 날짜
     dateInput.value = todayStr();
-    availableInput.value = TOTAL_SITES;
   }
 
+  // 예약가능 사이트 개수는 화면에 보이지 않고, app.js의 TOTAL_SITES를 만실률 계산에만 사용합니다.
   function updatePercent() {
-    const available = Number(availableInput.value);
+    const available = (typeof TOTAL_SITES !== "undefined") ? TOTAL_SITES : 0;
     const reserved = Number(reservedInput.value);
     if (!available || available <= 0 || reserved < 0) {
       resultPercent.textContent = "0%";
@@ -100,7 +100,6 @@
     resultPercent.textContent = pct + "%";
   }
 
-  availableInput.addEventListener("input", updatePercent);
   reservedInput.addEventListener("input", updatePercent);
   updatePercent();
 
@@ -111,21 +110,21 @@
     }
 
     const date = dateInput.value;
-    const available = Number(availableInput.value);
+    const available = TOTAL_SITES; // 화면에는 안 보이지만 만실률 계산을 위해 함께 저장됩니다.
     const reserved = Number(reservedInput.value);
     const checkins = Number(checkinsInput.value) || 0;
+    const checkouts = Number(checkoutsInput.value) || 0;
     const inUse = Number(inUseInput.value) || 0;
 
     if (!date) { alert("날짜를 선택해 주세요."); return; }
-    if (!available || available <= 0) { alert("예약가능 사이트 개수를 입력해 주세요."); return; }
     if (reserved < 0 || reserved > available) { alert("예약된 사이트 개수를 확인해 주세요."); return; }
-    if (checkins < 0 || inUse < 0) { alert("입실 수 / 이용중 수를 확인해 주세요."); return; }
+    if (checkins < 0 || checkouts < 0 || inUse < 0) { alert("입실 수 / 퇴실 수 / 이용중 수를 확인해 주세요."); return; }
 
     saveBtn.disabled = true;
     saveBtn.textContent = "저장 중…";
 
     try {
-      await saveRecord(date, available, reserved, checkins, inUse);
+      await saveRecord(date, available, reserved, checkins, inUse, checkouts);
       notice.textContent = "저장됐어요! 홈 화면으로 이동합니다.";
       notice.style.background = "var(--green-soft)";
       setTimeout(function () { window.location.href = "index.html"; }, 700);
@@ -137,6 +136,6 @@
     }
   });
 </script>
-<script src="board-api.js"></script>
+
 </body>
 </html>

@@ -45,6 +45,7 @@
       <div class="stat-tile"><div class="num" id="statReserved">-</div><div class="label">예약된 사이트</div></div>
       <div class="stat-tile"><div class="num" id="statRemain">-</div><div class="label">남은 사이트</div></div>
       <div class="stat-tile"><div class="num" id="statCheckins">-</div><div class="label">입실 수</div></div>
+      <div class="stat-tile"><div class="num" id="statCheckouts">-</div><div class="label">퇴실 수</div></div>
       <div class="stat-tile"><div class="num" id="statInUse">-</div><div class="label">이용중 수</div></div>
     </div>
   </div>
@@ -89,7 +90,7 @@
     document.getElementById("nextBtn").disabled = currentIndex <= 0; // 더 최신 기록 없음
 
     document.getElementById("ringPercent").textContent = record.percent + "%";
-    document.getElementById("ringCaption").textContent = record.reserved + " / " + record.available;
+    document.getElementById("ringCaption").textContent = "예약 " + record.reserved + "건";
     document.getElementById("ringFg").setAttribute(
       "stroke-dasharray",
       (RING_CIRCUMFERENCE * record.percent / 100).toFixed(1) + " " + RING_CIRCUMFERENCE
@@ -98,6 +99,7 @@
     document.getElementById("statRemain").textContent = Math.max(record.available - record.reserved, 0);
     document.getElementById("statCheckins").textContent = record.checkins;
     document.getElementById("statInUse").textContent = record.inUse;
+    document.getElementById("statCheckouts").textContent = record.checkouts;
   }
 
   function renderRecentList() {
@@ -110,7 +112,7 @@
       return (
         '<div class="list-item" data-index="' + i + '" style="cursor:pointer;">' +
           '<div class="date">' + shortDate(r.date) + '</div>' +
-          '<div class="nums">예약가능 ' + r.available + ' · 예약됨 ' + r.reserved + '</div>' +
+          '<div class="nums">예약됨 ' + r.reserved + ' · 입실 ' + r.checkins + ' · 이용중 ' + r.inUse + '</div>' +
           '<div class="pct">' + r.percent + '%</div>' +
         '</div>'
       );

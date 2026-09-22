@@ -35,7 +35,7 @@
     <h2>기간 내 기록</h2>
     <table class="data-table">
       <thead>
-        <tr><th>날짜</th><th>예약가능</th><th>예약됨</th><th>입실</th><th>이용중</th><th>만실%</th></tr>
+        <tr><th>날짜</th><th>예약됨</th><th>입실</th><th>퇴실</th><th>이용중</th><th>만실률</th></tr>
       </thead>
       <tbody id="tableBody">
         <tr><td colspan="6">불러오는 중…</td></tr>
@@ -71,8 +71,8 @@
     }
     body.innerHTML = recordsDesc.map(function (r) {
       return (
-        "<tr><td>" + shortDate(r.date) + "</td><td>" + r.available +
-        "</td><td>" + r.reserved + "</td><td>" + r.checkins +
+        "<tr><td>" + shortDate(r.date) + "</td><td>" + r.reserved +
+        "</td><td>" + r.checkins + "</td><td>" + r.checkouts +
         "</td><td>" + r.inUse + '</td><td class="pct">' + r.percent + "%</td></tr>"
       );
     }).join("");

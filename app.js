@@ -14,15 +14,15 @@ async function fetchRecords() {
   const res = await fetch(WEBAPP_URL);
   const data = await res.json();
   if (!data.ok) throw new Error(data.error || "불러오기 실패");
-  return data.records; // [{date, available, reserved, percent}, ...]
+  return data.records; // [{date, available, reserved, checkins, checkouts, inUse, percent}, ...]
 }
 
 /** 기록 하나를 저장(같은 날짜면 덮어쓰기)합니다. CORS 회피를 위해 text/plain으로 보냅니다. */
-async function saveRecord(date, available, reserved, checkins, inUse) {
+async function saveRecord(date, available, reserved, checkins, inUse, checkouts) {
   const res = await fetch(WEBAPP_URL, {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify({ date, available, reserved, checkins, inUse }),
+    body: JSON.stringify({ date, available, reserved, checkins, inUse, checkouts }),
   });
   const data = await res.json();
   if (!data.ok) throw new Error(data.error || "저장 실패");
